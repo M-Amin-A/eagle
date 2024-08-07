@@ -13,7 +13,7 @@ def save_to_df(df, _anomaly_metric, trigger_type, model_index):
         'anomaly_metric': _anomaly_metric,
     }
 
-    df = df.append([_raw_dict], ignore_index=True)
+    df.loc[len(df)] = _raw_dict
     return df
 
 
@@ -31,13 +31,13 @@ def _inspect_one_model(model_path):
 
 
 trigger_types = {
-    'clean': (60, 'model.pt'),
     'badnet': (10, 'model.pt'),
     'blended': (10, 'model.pt'),
     'bpp': (10, 'model.pt'),
     'sig': (10, 'model.pt'),
     'warped': (10, 'model.pth.tar'),
     'input_aware': (10, 'model.pth.tar'),
+    'clean': (60, 'model.pt'),
 }
 
 for trigger_type in trigger_types.keys():
