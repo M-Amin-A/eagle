@@ -461,9 +461,9 @@ def inspect_saved_model(opt):
 
     print(f'id_str:{id_str}')
 
-    # plt.show()
+    plt.show()
     # plt.savefig(f'./inspect_results/InspectResult--{id_str}.png')
-    plt.savefig(f'./inspect_results/out.png')
+    # plt.savefig(f'./inspect_results/out.png')
 
     plt.close()
 
