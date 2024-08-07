@@ -31,9 +31,9 @@ def _inspect_one_model(model_path):
 
 
 trigger_types = {
-    'warped': (10, 'model.pth.tar'),
-    'input_aware': (10, 'model.pth.tar'),
     'clean': (60, 'model.pt'),
+    'input_aware': (10, 'model.pth.tar'),
+    'warped': (10, 'model.pth.tar'),
     'badnet': (10, 'model.pt'),
     'blended': (10, 'model.pt'),
     'bpp': (10, 'model.pt'),
@@ -46,6 +46,8 @@ for trigger_type in trigger_types.keys():
 
     num_models, model_name = trigger_types[trigger_type]
     for i in range(1, num_models + 1):
+        if trigger_type == 'input_aware' and i == 9:
+            continue
         model_path = f'/kaggle/input/backdoor-attacked-cifar10-classifiers/{trigger_type}/model_{i}/{model_name}'
         _anomaly_metric = _inspect_one_model(model_path)
         df = save_to_df(df, _anomaly_metric, trigger_type, i)
