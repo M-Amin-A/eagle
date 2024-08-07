@@ -174,7 +174,10 @@ def load_model(opt):
     if 'bad_encoder_full_model' not in opt.model:
         ckpt = torch.load(opt.ckpt, map_location='cpu')
         if opt.model == 'preact':
-            state_dict = ckpt
+            if opt.ckpt.endswith('.pth.tar'):
+                state_dict = ckpt['netC']
+            else:
+                state_dict = ckpt
         elif 'Troj' not in opt.ckpt:
             try:
                 state_dict = ckpt['net_state_dict']
