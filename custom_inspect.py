@@ -19,9 +19,8 @@ def save_to_df(df, _anomaly_metric, trigger_type, model_index, layer_position_in
     return df
 
 
-def _inspect_one_model(model_path, layer_position_index):
+def _inspect_one_model(model_path):
     print(f'Inspecting model: {model_path}')
-    opt.inspect_layer_position = layer_position_index
     opt.ckpt = model_path
     opt.model = 'preact'
     opt.n_cls = 10
@@ -42,17 +41,16 @@ trigger_types = {
     'sig': (10, 'model.pt'),
 }
 
-for ldef in [0, 1, 2, 3, 4, 5]:
-    for trigger_type in trigger_types.keys():
-        # generate empty df
-        df = pd.DataFrame(columns=['trigger_type', 'model_index', 'anomaly_metric', 'poisoned', 'ldef'])
+for trigger_type in trigger_types.keys():
+    # generate empty df
+    df = pd.DataFrame(columns=['trigger_type', 'model_index', 'anomaly_metric', 'poisoned', 'ldef'])
 
-        num_models, model_name = trigger_types[trigger_type]
-        for i in range(1, num_models + 1):
-            if trigger_type == 'input_aware' and i == 9:
-                continue
-            model_path = f'/kaggle/input/backdoor-attacked-cifar10-classifiers/{trigger_type}/model_{i}/{model_name}'
-            _anomaly_metric = _inspect_one_model(model_path, ldef)
-            df = save_to_df(df, _anomaly_metric, trigger_type, i, ldef)
+    num_models, model_name = trigger_types[trigger_type]
+    for i in range(1, num_models + 1):
+        if trigger_type == 'input_aware' and i == 9:
+            continue
+        model_path = f'/kaggle/input/backdoor-attacked-cifar10-classifiers/{trigger_type}/model_{i}/{model_name}'
+        _anomaly_metric = _inspect_one_model(model_path)
+        df = save_to_df(df, _anomaly_metric, trigger_type, i, opt.inspect_layer_position)
 
-        df.to_csv(f'/kaggle/working/results/{trigger_type}_{ldef}.csv', index=False)
+    df.to_csv(f'/kaggle/working/results/{trigger_type}_{opt.inspect_layer_position}.csv', index=False)
